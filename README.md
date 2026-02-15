@@ -20,7 +20,7 @@ Store and manage secrets across multiple environments with military-grade encryp
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/envoke.git
+git clone https://github.com/HiyawNT/envoke.git
 cd envoke
 
 # Build

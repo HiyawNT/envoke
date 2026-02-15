@@ -98,7 +98,7 @@ This key encrypts all secrets before storage. The passphrase is never stored.`,
 		fmt.Println("  2. Add a secret: envoke secret set API_KEY")
 		fmt.Println("  3. View secrets: envoke tui")
 		fmt.Println()
-		fmt.Println("⚠️  IMPORTANT: Keep your master passphrase safe!")
+		fmt.Println("  IMPORTANT: Keep your master passphrase safe!")
 		fmt.Println("   Without it, you cannot decrypt your secrets.")
 
 		return nil
