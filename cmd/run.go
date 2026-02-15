@@ -42,9 +42,9 @@ Examples:
 		}
 
 		if len(secrets) == 0 {
-			fmt.Printf("⚠️  No secrets found in environment '%s'\n", env)
+			fmt.Printf("  No secrets found in environment '%s'\n", env)
 		} else {
-			fmt.Printf("🔐 Loaded %d secrets from '%s'\n", len(secrets), env)
+			fmt.Printf(" Loaded %d secrets from '%s'\n", len(secrets), env)
 		}
 
 		// Prepare command

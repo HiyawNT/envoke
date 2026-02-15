@@ -91,7 +91,7 @@ This key encrypts all secrets before storage. The passphrase is never stored.`,
 		}
 
 		fmt.Println()
-		fmt.Println("✅ envoke initialized successfully!")
+		fmt.Println(" envoke initialized successfully!")
 		fmt.Println()
 		fmt.Println("Next steps:")
 		fmt.Println("  1. Create an environment: envoke env create dev")

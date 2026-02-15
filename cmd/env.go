@@ -33,7 +33,7 @@ Examples:
 			return fmt.Errorf("failed to create environment: %w", err)
 		}
 
-		fmt.Printf("✅ Environment '%s' created successfully\n", envName)
+		fmt.Printf(" Environment '%s' created successfully\n", envName)
 		return nil
 	},
 }
@@ -83,7 +83,7 @@ var envUseCmd = &cobra.Command{
 			return fmt.Errorf("failed to set active environment: %w", err)
 		}
 
-		fmt.Printf("✅ Active environment set to '%s'\n", envName)
+		fmt.Printf(" Active environment set to '%s'\n", envName)
 		return nil
 	},
 }
@@ -98,7 +98,7 @@ var envDeleteCmd = &cobra.Command{
 		envName := args[0]
 
 		// Confirm deletion
-		fmt.Printf("⚠️  This will delete environment '%s' and all its secrets. Continue? (y/N): ", envName)
+		fmt.Printf("  This will delete environment '%s' and all its secrets. Continue? (y/N): ", envName)
 		var response string
 		fmt.Scanln(&response)
 
@@ -111,7 +111,7 @@ var envDeleteCmd = &cobra.Command{
 			return fmt.Errorf("failed to delete environment: %w", err)
 		}
 
-		fmt.Printf("✅ Environment '%s' deleted\n", envName)
+		fmt.Printf(" Environment '%s' deleted\n", envName)
 		return nil
 	},
 }

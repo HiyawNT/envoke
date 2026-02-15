@@ -26,10 +26,8 @@ type Secret struct {
 	EnvironmentID uint           `gorm:"not null;index" json:"environment_id"`
 	Environment   Environment    `gorm:"foreignKey:EnvironmentID" json:"-"`
 	Key           string         `gorm:"not null;index" json:"key"`
-	// Value stores the encrypted secret (NaCl secretbox output: nonce + ciphertext)
-	Value []byte `gorm:"type:blob;not null" json:"-"`
-	// Nonce stores the 24-byte nonce used for encryption (extracted for easier querying)
-	Nonce []byte `gorm:"type:blob;size:24;not null" json:"-"`
+	Value         []byte         `gorm:"type:blob;not null" json:"-"`
+	Nonce         []byte         `gorm:"type:blob;size:24;not null" json:"-"`
 }
 
 // Metadata stores configuration and key derivation parameters

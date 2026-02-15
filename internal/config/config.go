@@ -106,7 +106,7 @@ func (c *Config) Save() error {
 }
 
 // Get retrieves a configuration value
-func (c *Config) Get(key string) interface{} {
+func (c *Config) Get(key string) any {
 	return c.v.Get(key)
 }
 
@@ -116,6 +116,6 @@ func (c *Config) GetString(key string) string {
 }
 
 // Set sets a configuration value
-func (c *Config) Set(key string, value interface{}) {
+func (c *Config) Set(key string, value any) {
 	c.v.Set(key, value)
 }

@@ -19,7 +19,7 @@ This feature is under development and will allow you to:
 
 Currently, envoke operates in local-only mode.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Println("🚧 Cloud sync is not yet implemented")
+		fmt.Println(" Cloud sync is not yet implemented")
 		fmt.Println()
 		fmt.Println("envoke currently operates in local-only mode.")
 		fmt.Println("All secrets are stored encrypted in: ~/.config/envoke/envoke.db")
