@@ -5,10 +5,9 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"io"
-
 	"golang.org/x/crypto/argon2"
 	"golang.org/x/crypto/nacl/secretbox"
+	"io"
 )
 
 const (
@@ -45,7 +44,6 @@ func NewEncryptor(key []byte) (*Encryptor, error) {
 }
 
 // DeriveKey derives a 32-byte encryption key from a passphrase using Argon2id
-// This is a memory-hard, side-channel resistant KDF designed for password hashing
 // Parameters chosen for ~100ms on modern hardware (2 iterations, 64MB memory, 4 threads)
 func DeriveKey(passphrase string, salt []byte) []byte {
 	if len(salt) != SaltSize {
