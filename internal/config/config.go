@@ -9,11 +9,12 @@ import (
 )
 
 const (
-	AppName        = "envoke"
-	DBFileName     = "envoke.db"
-	ConfigName     = "config"
-	SaltKey        = "master_salt"
-	InitializedKey = "initialized"
+	AppName         = "envoke"
+	DBFileName      = "envoke.db"
+	ConfigName      = "config"
+	SaltKey         = "master_salt"
+	VerificationKey = "verification_hash"
+	InitializedKey  = "initialized"
 )
 
 // Config holds the application configuration
@@ -86,6 +87,20 @@ func (c *Config) SetInitialized(initialized bool) error {
 // GetSalt retrieves the stored salt for key derivation
 func (c *Config) GetSalt() string {
 	return c.v.GetString(SaltKey)
+}
+
+// GetVerificationHash retrieve the stored verification hash
+func (c *Config) GetVerificationHash() string {
+
+	return c.v.GetString(VerificationKey)
+
+}
+
+// SetVerificationHash stores the verification hash
+func (c *Config) SetVerificationHash(hash string) error {
+
+	c.v.Set(VerificationKey, hash)
+	return c.Save()
 }
 
 // SetSalt stores the salt for key derivation

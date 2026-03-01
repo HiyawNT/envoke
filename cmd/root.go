@@ -89,7 +89,20 @@ func initService() error {
 		return fmt.Errorf("failed to decode salt: %w", err)
 	}
 
-	// Derive key from passphrase
+	// Get verification Hash from config
+	verificationHash := cfg.GetVerificationHash()
+	if verificationHash == "" {
+
+		return fmt.Errorf("verification hash not found in config. Run 'envoke init' first")
+	}
+
+	// verify passphrase
+	if !crypto.VerifyPassphrase(string(passphrase), salt, verificationHash) {
+
+		return fmt.Errorf("Incorrect Passphrase")
+	}
+
+	// Derive key from passphrase (only after verification passed)
 	key := crypto.DeriveKey(string(passphrase), salt)
 
 	// Create encryptor

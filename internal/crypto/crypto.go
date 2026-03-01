@@ -128,3 +128,21 @@ func EncodeSalt(salt []byte) string {
 func DecodeSalt(encoded string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(encoded)
 }
+
+// This stores a hash of the derived key, not the passphrase itself
+func CreateVerificationHash(passphrase string, salt []byte) string {
+
+	key := DeriveKey(passphrase, salt)
+	hash := make([]byte, 32)
+	copy(hash, key)
+
+	return base64.StdEncoding.EncodeToString(hash)
+}
+
+func VerifyPassphrase(passphrase string, salt []byte, storedHash string) bool {
+	key := DeriveKey(passphrase, salt)
+	currentHash := base64.StdEncoding.EncodeToString(key)
+
+	// compare the hashes
+	return currentHash == storedHash
+}

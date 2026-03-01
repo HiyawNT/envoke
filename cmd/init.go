@@ -67,9 +67,19 @@ This key encrypts all secrets before storage. The passphrase is never stored.`,
 			return err
 		}
 
+		//Create verification hash from passphrase
+
+		verificationHash := crypto.CreateVerificationHash(string(passphrase), salt)
+
 		// Store salt in config
 		if err := cfg.SetSalt(crypto.EncodeSalt(salt)); err != nil {
 			return fmt.Errorf("failed to save salt: %w", err)
+		}
+
+		// Store Hash in config
+		if err := cfg.SetVerificationHash(verificationHash); err != nil {
+
+			return fmt.Errorf("failed to save verificationHash: %w", err)
 		}
 
 		// Initialize database
