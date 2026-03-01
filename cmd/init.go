@@ -53,7 +53,6 @@ This key encrypts all secrets before storage. The passphrase is never stored.`,
 		// Confirm passphrase
 		fmt.Print("Confirm passphrase: ")
 		confirmPassphrase, err := term.ReadPassword(int(syscall.Stdin))
-		fmt.Println()
 		if err != nil {
 			return fmt.Errorf("failed to read passphrase: %w", err)
 		}

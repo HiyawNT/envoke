@@ -72,7 +72,6 @@ func GenerateSalt() ([]byte, error) {
 }
 
 // Encrypt encrypts plaintext using NaCl secretbox (XSalsa20-Poly1305)
-// Returns the nonce and ciphertext separately for easier storage
 func (e *Encryptor) Encrypt(plaintext []byte) (nonce []byte, ciphertext []byte, err error) {
 	// Generate a random nonce
 	var nonceArray [NonceSize]byte
@@ -88,7 +87,6 @@ func (e *Encryptor) Encrypt(plaintext []byte) (nonce []byte, ciphertext []byte, 
 }
 
 // Decrypt decrypts ciphertext using NaCl secretbox
-// Expects the nonce and ciphertext to be provided separately
 func (e *Encryptor) Decrypt(nonce, ciphertext []byte) ([]byte, error) {
 	if len(nonce) != NonceSize {
 		return nil, ErrInvalidNonceSize
