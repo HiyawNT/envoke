@@ -13,6 +13,8 @@ import (
 	"golang.org/x/term"
 )
 
+var version string = "0.1.0"
+
 var (
 	cfg     *config.Config
 	svc     *service.SecretService
@@ -23,10 +25,20 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "envoke",
 	Short: "Encrypted secret manager for the terminal",
-	Long: `envoke (env + invoke) - A local-first encrypted secret manager
-	
-Store and manage secrets across multiple environments with military-grade encryption.
+	Long: `                                                              
+
+ /$$$$$$$$ /$$   /$$ /$$    /$$  /$$$$$$  /$$   /$$ /$$$$$$$$
+| $$_____/| $$$ | $$| $$   | $$ /$$__  $$| $$  /$$/| $$_____/
+| $$      | $$$$| $$| $$   | $$| $$  \ $$| $$ /$$/ | $$      
+| $$$$$   | $$ $$ $$|  $$ / $$/| $$  | $$| $$$$$/  | $$$$$   
+| $$__/   | $$  $$$$ \  $$ $$/ | $$  | $$| $$  $$  | $$__/   
+| $$      | $$\  $$$  \  $$$/  | $$  | $$| $$\  $$ | $$      
+| $$$$$$$$| $$ \  $$   \  $/   |  $$$$$$/| $$ \  $$| $$$$$$$$
+|________/|__/  \__/    \_/     \______/ |__/  \__/|________/
+
+envoke (env + invoke) - A local-first encrypted secret manager Store and manage secrets across multiple environments with military-grade encryption.
 All secrets are encrypted using NaCl secretbox (XSalsa20-Poly1305) before storage.`,
+	Version: version,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		// Skip initialization check for init and help commands
 		if cmd.Name() == "init" || cmd.Name() == "help" || cmd.Parent() == nil {
