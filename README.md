@@ -23,9 +23,29 @@ Store and manage secrets across multiple environments with military-grade encryp
 - 🔧 **CLI-first**: Scriptable commands for automation
 - 📦 **Portable**: Single binary, no dependencies
 
+
+## Installation
+Download the binary for your platform below.
+
+### Linux
+```bash 
+tar -xzf envoke_0.1.0_linux_amd64.tar.gz
+sudo mv envoke /usr/local/bin/
+```
+
+### MacOS
+```bash 
+tar -xzf envoke_0.1.0_darwin_arm64.tar.gz
+sudo mv envoke /usr/local/bin/
+```
+
+ ### Windows
+Extract the zip and add `envoke.exe` to your PATH
+
+
 ## 🚀 Quick Start
 
-### Installation
+Installing for Development
 
 ```bash
 # Clone the repository
