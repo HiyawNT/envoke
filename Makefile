@@ -67,12 +67,25 @@ dev: ## Run in development mode (rebuilds on change)
 release: test ## Build release binaries for multiple platforms
 	@echo " Building release binaries..."
 	@mkdir -p $(BUILD_DIR)/releases
-	GOOS=linux GOARCH=amd64 go build $(GOFLAGS) -o $(BUILD_DIR)/releases/$(BINARY_NAME)-linux-amd64 .
-	GOOS=linux GOARCH=arm64 go build $(GOFLAGS) -o $(BUILD_DIR)/releases/$(BINARY_NAME)-linux-arm64 .
-	GOOS=darwin GOARCH=amd64 go build $(GOFLAGS) -o $(BUILD_DIR)/releases/$(BINARY_NAME)-darwin-amd64 .
-	GOOS=darwin GOARCH=arm64 go build $(GOFLAGS) -o $(BUILD_DIR)/releases/$(BINARY_NAME)-darwin-arm64 .
-	GOOS=windows GOARCH=amd64 go build $(GOFLAGS) -o $(BUILD_DIR)/releases/$(BINARY_NAME)-windows-amd64.exe .
-	@echo " Release binaries built in $(BUILD_DIR)/releases/"
+	# Linux amd64
+	GOOS=linux GOARCH=amd64 go build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)
+	tar -czf $(BUILD_DIR)/releases/$(BINARY_NAME)_$(VERSION)_linux_amd64.tar.gz -C $(BUILD_DIR) $(BINARY_NAME)
+	# Linux arm64
+	GOOS=linux GOARCH=arm64 go build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)
+	tar -czf $(BUILD_DIR)/releases/$(BINARY_NAME)_$(VERSION)_linux_arm64.tar.gz -C $(BUILD_DIR) $(BINARY_NAME)
+	# macOS amd64
+	GOOS=darwin GOARCH=amd64 go build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)
+	tar -czf $(BUILD_DIR)/releases/$(BINARY_NAME)_$(VERSION)_darwin_amd64.tar.gz -C $(BUILD_DIR) $(BINARY_NAME)
+	# macOS arm64
+	GOOS=darwin GOARCH=arm64 go build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME)
+	tar -czf $(BUILD_DIR)/releases/$(BINARY_NAME)_$(VERSION)_darwin_arm64.tar.gz -C $(BUILD_DIR) $(BINARY_NAME)
+	# Windows amd64
+	GOOS=windows GOARCH=amd64 go build $(GOFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME).exe
+	cd $(BUILD_DIR) && zip -q releases/$(BINARY_NAME)_$(VERSION)_windows_amd64.zip $(BINARY_NAME).exe
+	# Generate checksums
+	cd $(BUILD_DIR)/releases && sha256sum * > checksums.txt
+	@echo " Release artifacts:"
+	@ls -lh $(BUILD_DIR)/releases
 
 setup: ## Set up development environment
 	@echo " Setting up development environment..."
