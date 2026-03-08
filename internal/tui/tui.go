@@ -745,11 +745,26 @@ func (m Model) viewMain() string {
 	// Top bar with stats
 	topBar := m.renderTopBar()
 
+	// Bottom help bar (render first to calculate height)
+	helpBar := m.renderHelpBar()
+
+	// Status bar
+	statusBar := m.renderStatusBar()
+
+	// Calculate reserved height for top bar (2 lines), status bar (0-1 lines), help bar, and padding
+	topBarHeight := lipgloss.Height(topBar)
+	statusBarHeight := lipgloss.Height(statusBar)
+	helpBarHeight := lipgloss.Height(helpBar)
+	reservedHeight := topBarHeight + statusBarHeight + helpBarHeight + 2 // +2 for margins
+
+	// Available height for panels
+	panelHeight := max(10, m.height-reservedHeight)
+
 	// Left panel - Environments
-	leftPanel := m.renderEnvironmentsPanel(leftWidth, m.height-8)
+	leftPanel := m.renderEnvironmentsPanel(leftWidth, panelHeight)
 
 	// Right panel - Secrets
-	rightPanel := m.renderSecretsPanel(rightWidth, m.height-8)
+	rightPanel := m.renderSecretsPanel(rightWidth, panelHeight)
 
 	// Combine panels
 	panels := lipgloss.JoinHorizontal(
@@ -757,12 +772,6 @@ func (m Model) viewMain() string {
 		leftPanel,
 		rightPanel,
 	)
-
-	// Bottom help bar
-	helpBar := m.renderHelpBar()
-
-	// Status bar
-	statusBar := m.renderStatusBar()
 
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
