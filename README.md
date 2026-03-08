@@ -1,6 +1,13 @@
-# 🔐 envoke
+                                     /$$$$$$$$ /$$   /$$ /$$    /$$  /$$$$$$  /$$   /$$ /$$$$$$$$
+                                    | $$_____/| $$$ | $$| $$   | $$ /$$__  $$| $$  /$$/| $$_____/
+                                    | $$      | $$$$| $$| $$   | $$| $$  \ $$| $$ /$$/ | $$      
+                                    | $$$$$   | $$ $$ $$|  $$ / $$/| $$  | $$| $$$$$/  | $$$$$   
+                                    | $$__/   | $$  $$$$ \  $$ $$/ | $$  | $$| $$  $$  | $$__/   
+                                    | $$      | $$\  $$$  \  $$$/  | $$  | $$| $$\  $$ | $$      
+                                    | $$$$$$$$| $$ \  $$   \  $/   |  $$$$$$/| $$ \  $$| $$$$$$$$
+                                    |________/|__/  \__/    \_/     \______/ |__/  \__/|________/
 
-**envoke** (env + invoke) - A production-grade, local-first encrypted secret manager for the terminal.
+**envoke** - A production-grade, local-first encrypted secret manager for the terminal.
 
 Store and manage secrets across multiple environments with military-grade encryption. All secrets are encrypted using NaCl secretbox (XSalsa20-Poly1305) before storage.
 
@@ -9,6 +16,8 @@ Store and manage secrets across multiple environments with military-grade encryp
 - 🔒 **Military-grade encryption**: NaCl secretbox (XSalsa20-Poly1305)
 - 🏠 **Local-first**: All secrets stored encrypted on your machine
 - 🎨 **Beautiful TUI**: Full-screen terminal interface with Bubble Tea
+- <img width="1909" height="1044" alt="image" src="https://github.com/user-attachments/assets/02d8ffe7-86db-44d4-b449-a2ed44c33ae9" />
+
 - 🌍 **Multi-environment**: Separate secrets for dev, staging, prod, etc.
 - 🚀 **Zero trust**: Master passphrase never stored, keys derived with Argon2id
 - 🔧 **CLI-first**: Scriptable commands for automation
