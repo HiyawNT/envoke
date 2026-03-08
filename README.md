@@ -11,18 +11,23 @@
 
 Store and manage secrets across multiple environments with military-grade encryption. All secrets are encrypted using NaCl secretbox (XSalsa20-Poly1305) before storage.
 
-## ✨ Features
+##  Features
 
-- 🔒 **Military-grade encryption**: NaCl secretbox (XSalsa20-Poly1305)
-- 🏠 **Local-first**: All secrets stored encrypted on your machine
-- 🎨 **Beautiful TUI**: Full-screen terminal interface with Bubble Tea
+-  **Military-grade encryption**: NaCl secretbox (XSalsa20-Poly1305)
+-  **Local-first**: All secrets stored encrypted on your machine
+-  **Beautiful TUI**: Full-screen terminal interface with Bubble Tea
 - <img width="1909" height="1044" alt="image" src="https://github.com/user-attachments/assets/02d8ffe7-86db-44d4-b449-a2ed44c33ae9" />
 
-- 🌍 **Multi-environment**: Separate secrets for dev, staging, prod, etc.
-- 🚀 **Zero trust**: Master passphrase never stored, keys derived with Argon2id
-- 🔧 **CLI-first**: Scriptable commands for automation
-- 📦 **Portable**: Single binary, no dependencies
+-  **Multi-environment**: Separate secrets for dev, staging, prod, etc.
+-  **Zero trust**: Master passphrase never stored, keys derived with Argon2id
+-  **CLI-first**: Scriptable commands for automation
+-  **Portable**: Single binary, no dependencies
 
+## Prebuilt Binaries
+
+Download the latest release:
+
+https://github.com/HiyawNT/envoke/releases
 
 ## Installation
 Download the binary for your platform below.
@@ -43,7 +48,7 @@ sudo mv envoke /usr/local/bin/
 Extract the zip and add `envoke.exe` to your PATH
 
 
-## 🚀 Quick Start
+##  Quick Start
 
 Installing for Development
 
@@ -158,7 +163,7 @@ Argon2id is configured for ~100ms on modern hardware:
 -  Encryption keys (derived on-demand)
 -  Plaintext secrets (encrypted before storage)
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 envoke/
@@ -210,7 +215,7 @@ go run . env create dev
 go run . tui
 ```
 
-## 🗺️ Roadmap
+##  Roadmap
 
 ### Phase 1 (Current)
 
@@ -236,7 +241,7 @@ go run . tui
 - [ ] RBAC (role-based access control)
 - [ ] Plugin system
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -244,11 +249,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 If you discover a security vulnerability, please email security@example.com instead of using the issue tracker.
 
-## 📄 License
+##  License
 
 MIT License - see LICENSE file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - [Bubble Tea](https://github.com/charmbracelet/bubbletea) - Terminal UI framework
 - [Cobra](https://github.com/spf13/cobra) - CLI framework
@@ -256,7 +261,7 @@ MIT License - see LICENSE file for details.
 - [GORM](https://gorm.io/) - ORM for Go
 
 
-## ⚠️ Disclaimer
+##  Disclaimer
 
 This is a production-quality starter template. Before using in production:
 
