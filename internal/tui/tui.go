@@ -16,7 +16,7 @@ import (
 
 // Catppuccin theme - using Mocha variant (dark theme)
 var (
-	theme = catppuccingo.Mocha
+	theme = catppuccingo.Latte
 
 	// Base colors
 	colorBase     = lipgloss.Color(theme.Base().Hex)
