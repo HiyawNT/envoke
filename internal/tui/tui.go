@@ -7,129 +7,198 @@ import (
 
 	"github.com/HiyawNT/envoke/internal/models"
 	"github.com/HiyawNT/envoke/internal/service"
+	"github.com/catppuccin/go"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
 
-// Color scheme inspired by modern terminal UIs
+// Catppuccin theme - using Mocha variant (dark theme)
 var (
-	// Background colors
-	colorBg           = lipgloss.Color("#1a1f2e")
-	colorBgPanel      = lipgloss.Color("#232837")
-	colorBgSelected   = lipgloss.Color("#2d3548")
-	colorBgHover      = lipgloss.Color("#3d4556")
-	colorBorder       = lipgloss.Color("#404758")
-	colorBorderActive = lipgloss.Color("#5294e2")
+	theme = catppuccingo.Mocha
 
-	// Accent colors
-	colorPrimary   = lipgloss.Color("#5294e2") // Blue
-	colorSecondary = lipgloss.Color("#f9c859") // Yellow
-	colorSuccess   = lipgloss.Color("#81c995") // Green
-	colorDanger    = lipgloss.Color("#e55561") // Red
-	colorWarning   = lipgloss.Color("#f9c859") // Yellow
-	colorInfo      = lipgloss.Color("#7eb7e6") // Light Blue
+	// Base colors
+	colorBase     = lipgloss.Color(theme.Base().Hex)
+	colorSurface0 = lipgloss.Color(theme.Surface0().Hex)
+	colorSurface1 = lipgloss.Color(theme.Surface1().Hex)
+	colorSurface2 = lipgloss.Color(theme.Surface2().Hex)
+	colorOverlay0 = lipgloss.Color(theme.Overlay0().Hex)
+	colorOverlay1 = lipgloss.Color(theme.Overlay1().Hex)
 
 	// Text colors
-	colorText       = lipgloss.Color("#d5dae1")
-	colorTextDim    = lipgloss.Color("#868c98")
-	colorTextDark   = lipgloss.Color("#5a6070")
-	colorTextBright = lipgloss.Color("#ffffff")
+	colorText     = lipgloss.Color(theme.Text().Hex)
+	colorSubtext0 = lipgloss.Color(theme.Subtext0().Hex)
+	colorSubtext1 = lipgloss.Color(theme.Subtext1().Hex)
 
-	// Styles
+	// Accent colors
+	colorMauve    = lipgloss.Color(theme.Mauve().Hex)
+	colorRed      = lipgloss.Color(theme.Red().Hex)
+	colorPeach    = lipgloss.Color(theme.Peach().Hex)
+	colorYellow   = lipgloss.Color(theme.Yellow().Hex)
+	colorGreen    = lipgloss.Color(theme.Green().Hex)
+	colorTeal     = lipgloss.Color(theme.Teal().Hex)
+	colorSky      = lipgloss.Color(theme.Sky().Hex)
+	colorBlue     = lipgloss.Color(theme.Blue().Hex)
+	colorLavender = lipgloss.Color(theme.Lavender().Hex)
+
+	// Component Styles
 	appTitleStyle = lipgloss.NewStyle().
-			Foreground(colorPrimary).
+			Foreground(colorMauve).
+			Background(colorSurface0).
 			Bold(true).
-			Padding(0, 1)
+			Padding(0, 2).
+			MarginBottom(0)
 
 	headerStyle = lipgloss.NewStyle().
-			Background(colorBgPanel).
+			Background(colorSurface0).
 			Foreground(colorText).
-			Padding(0, 2).
+			Padding(1, 2).
 			Bold(true)
 
 	panelStyle = lipgloss.NewStyle().
-			Background(colorBgPanel).
+			Background(colorBase).
 			Border(lipgloss.RoundedBorder()).
-			BorderForeground(colorBorder).
-			Padding(1, 2)
+			BorderForeground(colorSurface2).
+			Padding(1, 2).
+			MarginRight(1)
 
 	activePanelStyle = lipgloss.NewStyle().
-				Background(colorBgPanel).
+				Background(colorBase).
 				Border(lipgloss.RoundedBorder()).
-				BorderForeground(colorBorderActive).
-				Padding(1, 2)
+				BorderForeground(colorMauve).
+				Padding(1, 2).
+				MarginRight(1)
+
+	panelHeaderStyle = lipgloss.NewStyle().
+				Foreground(colorLavender).
+				Bold(true).
+				Underline(true)
 
 	envItemStyle = lipgloss.NewStyle().
 			Foreground(colorText).
-			Padding(0, 2)
+			Padding(0, 1)
 
 	envSelectedStyle = lipgloss.NewStyle().
-				Background(colorBgSelected).
-				Foreground(colorTextBright).
+				Background(colorSurface1).
+				Foreground(colorMauve).
 				Bold(true).
-				Padding(0, 2)
+				Padding(0, 1)
 
-	envCountStyle = lipgloss.NewStyle().
-			Foreground(colorTextDim).
-			Italic(true)
+	envHoverStyle = lipgloss.NewStyle().
+			Background(colorSurface0).
+			Foreground(colorText).
+			Padding(0, 1)
 
 	activeTagStyle = lipgloss.NewStyle().
-			Foreground(colorSuccess).
-			Background(lipgloss.Color("#1a3326")).
+			Foreground(colorBase).
+			Background(colorGreen).
 			Padding(0, 1).
-			Bold(true)
+			Bold(true).
+			MarginLeft(1)
 
 	secretKeyStyle = lipgloss.NewStyle().
-			Foreground(colorPrimary).
+			Foreground(colorBlue).
 			Bold(true)
 
 	secretValueStyle = lipgloss.NewStyle().
 				Foreground(colorText)
 
 	maskedValueStyle = lipgloss.NewStyle().
-				Foreground(colorTextDark)
+				Foreground(colorOverlay0)
 
 	statLabelStyle = lipgloss.NewStyle().
-			Foreground(colorTextDim)
+			Foreground(colorSubtext1)
 
 	statValueStyle = lipgloss.NewStyle().
-			Foreground(colorTextBright).
+			Foreground(colorPeach).
 			Bold(true)
 
 	helpStyle = lipgloss.NewStyle().
-			Foreground(colorTextDark).
-			Background(colorBgPanel).
+			Foreground(colorSubtext0).
+			Background(colorSurface0).
 			Padding(0, 1)
 
 	helpKeyStyle = lipgloss.NewStyle().
-			Foreground(colorSecondary).
-			Bold(true)
+			Foreground(colorYellow).
+			Background(colorSurface1).
+			Padding(0, 1).
+			Bold(true).
+			MarginRight(1)
 
 	errorStyle = lipgloss.NewStyle().
-			Foreground(colorDanger).
-			Bold(true)
+			Foreground(colorBase).
+			Background(colorRed).
+			Bold(true).
+			Padding(0, 2)
 
 	successStyle = lipgloss.NewStyle().
-			Foreground(colorSuccess).
-			Bold(true)
+			Foreground(colorBase).
+			Background(colorGreen).
+			Bold(true).
+			Padding(0, 2)
+
+	warningStyle = lipgloss.NewStyle().
+			Foreground(colorBase).
+			Background(colorYellow).
+			Bold(true).
+			Padding(0, 2)
 
 	inputLabelStyle = lipgloss.NewStyle().
-			Foreground(colorSecondary).
+			Foreground(colorLavender).
 			Bold(true).
 			Padding(0, 0, 0, 2)
 
 	modalStyle = lipgloss.NewStyle().
-			Background(colorBgPanel).
-			Border(lipgloss.RoundedBorder()).
-			BorderForeground(colorBorderActive).
-			Padding(2, 4)
+			Background(colorSurface0).
+			Border(lipgloss.ThickBorder()).
+			BorderForeground(colorMauve).
+			Padding(2, 4).
+			MarginTop(2).
+			MarginBottom(2)
 
-	searchStyle = lipgloss.NewStyle().
-			Foreground(colorInfo).
-			Background(colorBgHover).
-			Padding(0, 1)
+	modalTitleStyle = lipgloss.NewStyle().
+			Foreground(colorMauve).
+			Background(colorSurface1).
+			Bold(true).
+			Padding(0, 2).
+			Align(lipgloss.Center)
+
+	searchActiveStyle = lipgloss.NewStyle().
+				Foreground(colorBase).
+				Background(colorSky).
+				Padding(0, 1).
+				Bold(true)
+
+	searchInactiveStyle = lipgloss.NewStyle().
+				Foreground(colorSubtext1).
+				Background(colorSurface1).
+				Padding(0, 1)
+
+	dividerStyle = lipgloss.NewStyle().
+			Foreground(colorSurface2)
+
+	scrollIndicatorStyle = lipgloss.NewStyle().
+				Foreground(colorOverlay1)
+
+	// Special indicator styles
+	indicatorActiveStyle = lipgloss.NewStyle().
+				Foreground(colorMauve).
+				Bold(true)
+
+	indicatorInactiveStyle = lipgloss.NewStyle().
+				Foreground(colorOverlay0)
+
+	countBadgeStyle = lipgloss.NewStyle().
+			Foreground(colorBase).
+			Background(colorTeal).
+			Padding(0, 1).
+			Bold(true)
+
+	emptyStateStyle = lipgloss.NewStyle().
+			Foreground(colorSubtext0).
+			Italic(true).
+			Padding(2, 0)
 )
 
 type panel int
@@ -276,13 +345,20 @@ type secretItem struct {
 type tickMsg time.Time
 
 func NewModel(service *service.SecretService) Model {
+	// Customize text input styles with Catppuccin
 	keyInput := textinput.New()
 	keyInput.Placeholder = "SECRET_KEY"
+	keyInput.PlaceholderStyle = lipgloss.NewStyle().Foreground(colorOverlay0)
+	keyInput.TextStyle = lipgloss.NewStyle().Foreground(colorText)
+	keyInput.Cursor.Style = lipgloss.NewStyle().Foreground(colorMauve)
 	keyInput.CharLimit = 128
 	keyInput.Width = 40
 
 	valueInput := textinput.New()
 	valueInput.Placeholder = "secret value"
+	valueInput.PlaceholderStyle = lipgloss.NewStyle().Foreground(colorOverlay0)
+	valueInput.TextStyle = lipgloss.NewStyle().Foreground(colorText)
+	valueInput.Cursor.Style = lipgloss.NewStyle().Foreground(colorMauve)
 	valueInput.CharLimit = 1024
 	valueInput.EchoMode = textinput.EchoPassword
 	valueInput.EchoCharacter = '•'
@@ -290,6 +366,9 @@ func NewModel(service *service.SecretService) Model {
 
 	searchInput := textinput.New()
 	searchInput.Placeholder = "Search secrets..."
+	searchInput.PlaceholderStyle = lipgloss.NewStyle().Foreground(colorOverlay0)
+	searchInput.TextStyle = lipgloss.NewStyle().Foreground(colorText)
+	searchInput.Cursor.Style = lipgloss.NewStyle().Foreground(colorSky)
 	searchInput.CharLimit = 100
 	searchInput.Width = 30
 
@@ -722,7 +801,10 @@ func (m Model) handleInputView(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	if m.width == 0 {
-		return "Loading..."
+		return lipgloss.NewStyle().
+			Foreground(colorText).
+			Background(colorBase).
+			Render("Loading...")
 	}
 
 	switch m.currentView {
@@ -751,11 +833,11 @@ func (m Model) viewMain() string {
 	// Status bar
 	statusBar := m.renderStatusBar()
 
-	// Calculate reserved height for top bar (2 lines), status bar (0-1 lines), help bar, and padding
+	// Calculate reserved height
 	topBarHeight := lipgloss.Height(topBar)
 	statusBarHeight := lipgloss.Height(statusBar)
 	helpBarHeight := lipgloss.Height(helpBar)
-	reservedHeight := topBarHeight + statusBarHeight + helpBarHeight + 2 // +2 for margins
+	reservedHeight := topBarHeight + statusBarHeight + helpBarHeight + 2
 
 	// Available height for panels
 	panelHeight := max(10, m.height-reservedHeight)
@@ -773,16 +855,24 @@ func (m Model) viewMain() string {
 		rightPanel,
 	)
 
-	return lipgloss.JoinVertical(
+	// Full view with background
+	mainView := lipgloss.JoinVertical(
 		lipgloss.Left,
 		topBar,
 		panels,
 		statusBar,
 		helpBar,
 	)
+
+	return lipgloss.NewStyle().
+		Background(colorBase).
+		Width(m.width).
+		Height(m.height).
+		Render(mainView)
 }
 
 func (m Model) renderTopBar() string {
+	// Title with icon
 	title := appTitleStyle.Render("🔐 ENVOKE")
 
 	totalEnvs := len(m.environments)
@@ -794,13 +884,19 @@ func (m Model) renderTopBar() string {
 		activeEnv = env.Name
 	}
 
-	stats := fmt.Sprintf(
-		"%s %s  %s %s  %s %s",
-		statLabelStyle.Render("Environments:"),
-		statValueStyle.Render(fmt.Sprintf("%d", totalEnvs)),
-		statLabelStyle.Render("Secrets:"),
-		statValueStyle.Render(fmt.Sprintf("%d", totalSecrets)),
-		statLabelStyle.Render("Current:"),
+	// Stats with badges
+	envBadge := countBadgeStyle.Render(fmt.Sprintf("%d", totalEnvs))
+	secretBadge := countBadgeStyle.Render(fmt.Sprintf("%d", totalSecrets))
+
+	stats := lipgloss.JoinHorizontal(
+		lipgloss.Left,
+		statLabelStyle.Render("Environments: "),
+		envBadge,
+		"  ",
+		statLabelStyle.Render("Secrets: "),
+		secretBadge,
+		"  ",
+		statLabelStyle.Render("Current: "),
 		statValueStyle.Render(activeEnv),
 	)
 
@@ -814,66 +910,60 @@ func (m Model) renderTopBar() string {
 func (m Model) renderEnvironmentsPanel(width, height int) string {
 	var content strings.Builder
 
-	header := lipgloss.NewStyle().
-		Foreground(colorSecondary).
-		Bold(true).
-		Render(fmt.Sprintf("╭─ ENVIRONMENTS (%d) ─", len(m.environments)))
+	// Panel header with decorative border
+	countBadge := countBadgeStyle.Render(fmt.Sprintf("%d", len(m.environments)))
+	header := lipgloss.JoinHorizontal(
+		lipgloss.Left,
+		panelHeaderStyle.Render("ENVIRONMENTS "),
+		countBadge,
+	)
 
 	content.WriteString(header)
-	content.WriteString("\n│\n")
+	content.WriteString("\n")
+	content.WriteString(dividerStyle.Render(strings.Repeat("─", width-4)))
+	content.WriteString("\n\n")
 
 	if len(m.environments) == 0 {
-		empty := lipgloss.NewStyle().
-			Foreground(colorTextDim).
-			Render("│  No environments found")
+		empty := emptyStateStyle.Render("📭 No environments found")
 		content.WriteString(empty)
-		content.WriteString("\n│\n")
+		content.WriteString("\n")
 	} else {
-		visibleHeight := height - 6
+		visibleHeight := height - 8
 		start := m.envScrollOffset
 		end := min(start+visibleHeight, len(m.environments))
 
 		for i := start; i < end; i++ {
 			env := m.environments[i]
 
-			prefix := "│  "
-			indicator := "  "
+			indicator := indicatorInactiveStyle.Render("  ")
 			style := envItemStyle
 
 			if i == m.currentEnvIndex {
-				indicator = "▶ "
+				indicator = indicatorActiveStyle.Render("▶ ")
 				style = envSelectedStyle
 			}
 
 			status := ""
 			if env.IsActive {
-				status = " " + activeTagStyle.Render("ACTIVE")
+				status = activeTagStyle.Render(" ACTIVE ")
 			}
 
-			line := fmt.Sprintf("%s%s%s%s", prefix, indicator, env.Name, status)
+			line := fmt.Sprintf("%s%s%s", indicator, env.Name, status)
+			rendered := style.Width(width - 6).Render(line)
 
-			if i == m.currentEnvIndex {
-				line = style.Width(width - 6).Render(line)
-			} else {
-				line = style.Render(line)
-			}
-
-			content.WriteString(line)
+			content.WriteString(rendered)
 			content.WriteString("\n")
 		}
 
-		// Show scroll indicator
+		// Scroll indicator
 		if len(m.environments) > visibleHeight {
-			scrollInfo := fmt.Sprintf("│  %s %d-%d of %d",
-				lipgloss.NewStyle().Foreground(colorTextDark).Render("↕"),
-				start+1, end, len(m.environments))
-			content.WriteString(scrollInfo)
 			content.WriteString("\n")
+			scrollInfo := scrollIndicatorStyle.Render(
+				fmt.Sprintf("↕ %d-%d of %d", start+1, end, len(m.environments)),
+			)
+			content.WriteString(scrollInfo)
 		}
 	}
-
-	content.WriteString("╰")
-	content.WriteString(strings.Repeat("─", width-2))
 
 	panelStr := content.String()
 
@@ -886,46 +976,51 @@ func (m Model) renderEnvironmentsPanel(width, height int) string {
 func (m Model) renderSecretsPanel(width, height int) string {
 	var content strings.Builder
 
+	// Panel header
 	secretCount := len(m.filteredSecrets)
+	totalCount := len(m.secrets)
+
+	var countDisplay string
 	if m.searchQuery != "" {
-		header := lipgloss.NewStyle().
-			Foreground(colorSecondary).
-			Bold(true).
-			Render(fmt.Sprintf("╭─ SECRETS (%d/%d) ─", secretCount, len(m.secrets)))
-		content.WriteString(header)
+		countDisplay = fmt.Sprintf("%d/%d", secretCount, totalCount)
 	} else {
-		header := lipgloss.NewStyle().
-			Foreground(colorSecondary).
-			Bold(true).
-			Render(fmt.Sprintf("╭─ SECRETS (%d) ─", secretCount))
-		content.WriteString(header)
+		countDisplay = fmt.Sprintf("%d", secretCount)
 	}
 
-	content.WriteString("\n│\n")
+	countBadge := countBadgeStyle.Render(countDisplay)
+	header := lipgloss.JoinHorizontal(
+		lipgloss.Left,
+		panelHeaderStyle.Render("SECRETS "),
+		countBadge,
+	)
+
+	content.WriteString(header)
+	content.WriteString("\n")
+	content.WriteString(dividerStyle.Render(strings.Repeat("─", width-4)))
+	content.WriteString("\n\n")
 
 	if len(m.environments) == 0 {
-		empty := lipgloss.NewStyle().
-			Foreground(colorTextDim).
-			Render("│  Select an environment first")
+		empty := emptyStateStyle.Render("← Select an environment first")
 		content.WriteString(empty)
-		content.WriteString("\n│\n")
+		content.WriteString("\n")
 	} else if len(m.filteredSecrets) == 0 {
-		empty := lipgloss.NewStyle().
-			Foreground(colorTextDim).
-			Render("│  No secrets found. Press 'a' to add one.")
-		content.WriteString(empty)
-		content.WriteString("\n│\n")
-	} else {
-		// Show search query if active
 		if m.searchQuery != "" {
-			searchInfo := fmt.Sprintf("│  %s %s",
-				searchStyle.Render("🔍"),
-				lipgloss.NewStyle().Foreground(colorInfo).Render(m.searchQuery))
-			content.WriteString(searchInfo)
-			content.WriteString("\n│\n")
+			empty := emptyStateStyle.Render("🔍 No secrets match your search")
+			content.WriteString(empty)
+		} else {
+			empty := emptyStateStyle.Render("📝 No secrets yet. Press 'a' to add one.")
+			content.WriteString(empty)
+		}
+		content.WriteString("\n")
+	} else {
+		// Show search indicator
+		if m.searchQuery != "" {
+			searchBadge := searchActiveStyle.Render(fmt.Sprintf("🔍 %s", m.searchQuery))
+			content.WriteString(searchBadge)
+			content.WriteString("\n\n")
 		}
 
-		visibleHeight := height - 8
+		visibleHeight := height - 12
 		if m.searchQuery != "" {
 			visibleHeight -= 2
 		}
@@ -933,6 +1028,7 @@ func (m Model) renderSecretsPanel(width, height int) string {
 		start := m.secretScrollOffset
 		end := min(start+visibleHeight, len(m.filteredSecrets))
 
+		// Calculate max key length for alignment
 		maxKeyLen := 0
 		for i := start; i < end; i++ {
 			if len(m.filteredSecrets[i].Key) > maxKeyLen {
@@ -944,16 +1040,19 @@ func (m Model) renderSecretsPanel(width, height int) string {
 		for i := start; i < end; i++ {
 			secret := m.filteredSecrets[i]
 
-			prefix := "│  "
-			indicator := "  "
+			indicator := indicatorInactiveStyle.Render("  ")
+			bgStyle := lipgloss.NewStyle()
 
 			if i == m.selectedSecret {
-				indicator = "▶ "
+				indicator = indicatorActiveStyle.Render("▶ ")
+				bgStyle = envSelectedStyle
 			}
 
 			displayValue := secret.Masked
+			valueStyle := maskedValueStyle
 			if m.showValues {
 				displayValue = secret.Value
+				valueStyle = secretValueStyle
 			}
 
 			// Truncate if too long
@@ -963,45 +1062,38 @@ func (m Model) renderSecretsPanel(width, height int) string {
 			}
 
 			keyStyled := secretKeyStyle.Render(fmt.Sprintf("%-*s", maxKeyLen, secret.Key))
-			valueStyled := maskedValueStyle.Render(displayValue)
-			if m.showValues {
-				valueStyled = secretValueStyle.Render(displayValue)
-			}
+			valueStyled := valueStyle.Render(displayValue)
 
-			line := fmt.Sprintf("%s%s%s = %s", prefix, indicator, keyStyled, valueStyled)
+			line := fmt.Sprintf("%s%s = %s", indicator, keyStyled, valueStyled)
 
 			if i == m.selectedSecret {
-				line = envSelectedStyle.Width(width - 6).Render(line)
+				line = bgStyle.Width(width - 6).Render(line)
 			}
 
 			content.WriteString(line)
 			content.WriteString("\n")
 		}
 
-		// Show scroll indicator
+		// Scroll indicator
 		if len(m.filteredSecrets) > visibleHeight {
-			scrollInfo := fmt.Sprintf("│  %s %d-%d of %d",
-				lipgloss.NewStyle().Foreground(colorTextDark).Render("↕"),
-				start+1, end, len(m.filteredSecrets))
+			content.WriteString("\n")
+			scrollInfo := scrollIndicatorStyle.Render(
+				fmt.Sprintf("↕ %d-%d of %d", start+1, end, len(m.filteredSecrets)),
+			)
 			content.WriteString(scrollInfo)
 			content.WriteString("\n")
 		}
 
-		// Show visibility status
-		content.WriteString("│\n")
-		visStatus := "hidden"
-		visColor := colorTextDark
-		if m.showValues {
-			visStatus = "visible"
-			visColor = colorWarning
-		}
-		statusLine := fmt.Sprintf("│  Values: %s", lipgloss.NewStyle().Foreground(visColor).Bold(true).Render(visStatus))
-		content.WriteString(statusLine)
+		// Visibility status
 		content.WriteString("\n")
+		visStatus := "🔒 hidden"
+		visStyle := lipgloss.NewStyle().Foreground(colorOverlay1)
+		if m.showValues {
+			visStatus = "👁️  visible"
+			visStyle = lipgloss.NewStyle().Foreground(colorYellow).Bold(true)
+		}
+		content.WriteString(visStyle.Render(fmt.Sprintf("Values: %s", visStatus)))
 	}
-
-	content.WriteString("╰")
-	content.WriteString(strings.Repeat("─", width-2))
 
 	panelStr := content.String()
 
@@ -1026,54 +1118,101 @@ func (m Model) renderHelpBar() string {
 
 	if m.activePanel == panelEnvironments {
 		helps = []string{
-			helpKeyStyle.Render("↑↓") + helpStyle.Render(" navigate"),
-			helpKeyStyle.Render("→") + helpStyle.Render(" secrets"),
-			helpKeyStyle.Render("r") + helpStyle.Render(" refresh"),
-			helpKeyStyle.Render("q") + helpStyle.Render(" quit"),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("↑↓"), helpStyle.Render("navigate")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("→"), helpStyle.Render("secrets")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("r"), helpStyle.Render("refresh")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("q"), helpStyle.Render("quit")),
 		}
 	} else {
 		helps = []string{
-			helpKeyStyle.Render("↑↓") + helpStyle.Render(" navigate"),
-			helpKeyStyle.Render("←") + helpStyle.Render(" envs"),
-			helpKeyStyle.Render("a") + helpStyle.Render(" add"),
-			helpKeyStyle.Render("e") + helpStyle.Render(" edit"),
-			helpKeyStyle.Render("d") + helpStyle.Render(" delete"),
-			helpKeyStyle.Render("t") + helpStyle.Render(" toggle"),
-			helpKeyStyle.Render("/") + helpStyle.Render(" search"),
-			helpKeyStyle.Render("q") + helpStyle.Render(" quit"),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("↑↓"), helpStyle.Render("nav")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("←"), helpStyle.Render("envs")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("a"), helpStyle.Render("add")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("e"), helpStyle.Render("edit")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("d"), helpStyle.Render("delete")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("t"), helpStyle.Render("toggle")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("/"), helpStyle.Render("search")),
+			lipgloss.JoinHorizontal(lipgloss.Left, helpKeyStyle.Render("q"), helpStyle.Render("quit")),
 		}
 	}
 
 	helpText := lipgloss.JoinHorizontal(lipgloss.Left, helps...)
-	return helpStyle.Width(m.width - 4).Render(helpText)
+	return lipgloss.NewStyle().
+		Background(colorSurface0).
+		Foreground(colorText).
+		Padding(0, 2).
+		Width(m.width - 4).
+		Render(helpText)
 }
 
 func (m Model) viewAddSecretModal() string {
-	title := lipgloss.NewStyle().
-		Foreground(colorPrimary).
-		Bold(true).
-		Render("➕ Add New Secret")
+	// Modal title
+	title := modalTitleStyle.
+		Width(50).
+		Render("✨ Add New Secret")
 
+	// Form content
 	var form strings.Builder
-	form.WriteString("\n")
+	form.WriteString("\n\n")
 
-	keyLabel := inputLabelStyle.Render("Key:")
+	// Key input
+	keyLabel := inputLabelStyle.Render("🔑 Key:")
 	form.WriteString(keyLabel)
 	form.WriteString("\n  ")
-	form.WriteString(m.keyInput.View())
+
+	keyInputBorder := lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(colorSurface2).
+		Padding(0, 1).
+		Render(m.keyInput.View())
+
+	if m.inputMode == "key" {
+		keyInputBorder = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(colorMauve).
+			Padding(0, 1).
+			Render(m.keyInput.View())
+	}
+
+	form.WriteString(keyInputBorder)
 	form.WriteString("\n\n")
 
-	valueLabel := inputLabelStyle.Render("Value:")
+	// Value input
+	valueLabel := inputLabelStyle.Render("🔒 Value:")
 	form.WriteString(valueLabel)
 	form.WriteString("\n  ")
-	form.WriteString(m.valueInput.View())
+
+	valueInputBorder := lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(colorSurface2).
+		Padding(0, 1).
+		Render(m.valueInput.View())
+
+	if m.inputMode == "value" {
+		valueInputBorder = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(colorMauve).
+			Padding(0, 1).
+			Render(m.valueInput.View())
+	}
+
+	form.WriteString(valueInputBorder)
 	form.WriteString("\n\n")
 
-	help := helpStyle.Render(
-		helpKeyStyle.Render("tab") + " switch field  " +
-			helpKeyStyle.Render("enter") + " save  " +
-			helpKeyStyle.Render("esc") + " cancel",
-	)
+	// Help text
+	help := lipgloss.NewStyle().
+		Foreground(colorSubtext0).
+		Render(
+			lipgloss.JoinHorizontal(
+				lipgloss.Left,
+				helpKeyStyle.Render("tab"),
+				" switch  ",
+				helpKeyStyle.Render("enter"),
+				" save  ",
+				helpKeyStyle.Render("esc"),
+				" cancel",
+			),
+		)
 
 	content := lipgloss.JoinVertical(
 		lipgloss.Left,
@@ -1084,41 +1223,73 @@ func (m Model) viewAddSecretModal() string {
 
 	modal := modalStyle.Render(content)
 
-	// Center the modal
-	return lipgloss.Place(
+	// Center the modal on colored background
+	centered := lipgloss.Place(
 		m.width,
 		m.height,
 		lipgloss.Center,
 		lipgloss.Center,
 		modal,
 	)
+
+	return lipgloss.NewStyle().
+		Background(colorBase).
+		Render(centered)
 }
 
 func (m Model) viewEditSecretModal() string {
-	title := lipgloss.NewStyle().
-		Foreground(colorWarning).
-		Bold(true).
-		Render(fmt.Sprintf("✏️  Edit Secret: %s", m.editingKey))
+	// Modal title
+	title := modalTitleStyle.
+		Width(50).
+		Render(fmt.Sprintf("✏️  Edit Secret"))
 
+	// Form content
 	var form strings.Builder
-	form.WriteString("\n")
+	form.WriteString("\n\n")
 
-	keyLabel := inputLabelStyle.Render("Key (read-only):")
+	// Key display (read-only)
+	keyLabel := inputLabelStyle.Render("🔑 Key (read-only):")
 	form.WriteString(keyLabel)
 	form.WriteString("\n  ")
-	form.WriteString(lipgloss.NewStyle().Foreground(colorTextDim).Render(m.editingKey))
+
+	keyDisplay := lipgloss.NewStyle().
+		Foreground(colorSubtext1).
+		Background(colorSurface1).
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(colorSurface2).
+		Padding(0, 1).
+		Width(40).
+		Render(m.editingKey)
+
+	form.WriteString(keyDisplay)
 	form.WriteString("\n\n")
 
-	valueLabel := inputLabelStyle.Render("New Value:")
+	// Value input
+	valueLabel := inputLabelStyle.Render("🔒 New Value:")
 	form.WriteString(valueLabel)
 	form.WriteString("\n  ")
-	form.WriteString(m.valueInput.View())
+
+	valueInputBorder := lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(colorMauve).
+		Padding(0, 1).
+		Render(m.valueInput.View())
+
+	form.WriteString(valueInputBorder)
 	form.WriteString("\n\n")
 
-	help := helpStyle.Render(
-		helpKeyStyle.Render("enter") + " save  " +
-			helpKeyStyle.Render("esc") + " cancel",
-	)
+	// Help text
+	help := lipgloss.NewStyle().
+		Foreground(colorSubtext0).
+		Render(
+			lipgloss.JoinHorizontal(
+				lipgloss.Left,
+				helpKeyStyle.Render("enter"),
+				" save  ",
+				helpKeyStyle.Render("esc"),
+				" cancel",
+			),
+		)
 
 	content := lipgloss.JoinVertical(
 		lipgloss.Left,
@@ -1129,49 +1300,81 @@ func (m Model) viewEditSecretModal() string {
 
 	modal := modalStyle.Render(content)
 
-	return lipgloss.Place(
+	centered := lipgloss.Place(
 		m.width,
 		m.height,
 		lipgloss.Center,
 		lipgloss.Center,
 		modal,
 	)
+
+	return lipgloss.NewStyle().
+		Background(colorBase).
+		Render(centered)
 }
 
 func (m Model) viewDeleteConfirmModal() string {
+	// Modal title with warning style
 	title := lipgloss.NewStyle().
-		Foreground(colorDanger).
+		Foreground(colorBase).
+		Background(colorRed).
 		Bold(true).
+		Padding(0, 2).
+		Width(50).
+		Align(lipgloss.Center).
 		Render("⚠️  Confirm Deletion")
 
+	// Warning message
 	message := lipgloss.NewStyle().
 		Foreground(colorText).
-		Padding(1, 0).
-		Render(fmt.Sprintf("Are you sure you want to delete the secret:\n\n  %s\n\nThis action cannot be undone.",
-			secretKeyStyle.Render(m.deleteTarget)))
+		Padding(2, 2).
+		Render(
+			fmt.Sprintf(
+				"Are you sure you want to delete this secret?\n\n"+
+					"  %s\n\n"+
+					"%s",
+				secretKeyStyle.Render(m.deleteTarget),
+				lipgloss.NewStyle().
+					Foreground(colorSubtext0).
+					Italic(true).
+					Render("This action cannot be undone."),
+			),
+		)
 
-	help := helpStyle.Render(
-		helpKeyStyle.Render("y") + " yes  " +
-			helpKeyStyle.Render("n") + " no",
-	)
+	// Help text
+	help := lipgloss.NewStyle().
+		Foreground(colorSubtext0).
+		Padding(1, 0).
+		Render(
+			lipgloss.JoinHorizontal(
+				lipgloss.Left,
+				helpKeyStyle.Render("y"),
+				" confirm  ",
+				helpKeyStyle.Render("n"),
+				" cancel",
+			),
+		)
 
 	content := lipgloss.JoinVertical(
 		lipgloss.Left,
 		title,
 		message,
-		"\n",
 		help,
 	)
 
 	modal := modalStyle.Render(content)
 
-	return lipgloss.Place(
+	centered := lipgloss.Place(
 		m.width,
 		m.height,
 		lipgloss.Center,
 		lipgloss.Center,
 		modal,
 	)
+
+	return lipgloss.NewStyle().
+		Background(colorBase).
+		Render(centered)
 }
 
 // Run starts the TUI
